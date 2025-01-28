@@ -1,8 +1,10 @@
 package jdbc;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class StudentManager {
+
     public void addStudent(String name, String rollNo, String email, String phone) {
         try {
             DBConnect.getConnect();
