@@ -90,25 +90,20 @@ public class sgsMain {
 
         scanner.close();
     }
-
-    /**
-     * Safely reads an integer input from the user.
-     * If an invalid input is provided, it keeps prompting the user until a valid integer is entered.
-     */
     private static int safeReadInt(Scanner scanner) {
         while (true) {
             try {
                 if (scanner.hasNextInt()) {
                     int input = scanner.nextInt();
                     
-                   scanner.nextLine(); // Clear the buffer after reading the integer
+                   scanner.nextLine();
                     return input;
                 } else {
-                    scanner.nextLine(); // Consume invalid input
+                    scanner.nextLine();
                     System.out.print("Invalid input. Please enter a valid number: ");
                 }
             } catch (Exception e) {
-                scanner.nextLine(); // Clear any remaining input
+                scanner.nextLine();
                 System.out.print("Error: Please enter a valid number: ");
             }
         }
