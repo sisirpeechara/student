@@ -9,6 +9,8 @@ public class sgsMain {
         StudentManager manager = new StudentManager();
         StudentUpdater updater = new StudentUpdater();
         MarksManager marksManager = new MarksManager();
+        MarksUpdater marksUpdater = new MarksUpdater();
+        ReportCardGenerator reportCardGenerator = new ReportCardGenerator(); // New Report Card Generator
 
         while (true) {
             System.out.println("\nWelcome to Student Grade System!");
@@ -17,7 +19,6 @@ public class sgsMain {
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
             
-            // Read the main menu choice
             int userType = safeReadInt(scanner);
 
             if (userType == 1) { 
@@ -27,15 +28,16 @@ public class sgsMain {
                     System.out.println("2. Update Student");
                     System.out.println("3. Delete Student");
                     System.out.println("4. Insert Marks");
-                    System.out.println("5. Logout");
+                    System.out.println("5. Update Marks");
+                    System.out.println("6. Generate Report Card"); // New option
+                    System.out.println("7. Logout");
                     System.out.print("Enter your choice: ");
                     
-                    // Read the admin menu choice
                     int adminChoice = safeReadInt(scanner);
 
                     if (adminChoice == 1) {
                         System.out.print("Enter student name: ");
-                        String name = scanner.nextLine(); // Read full name input
+                        String name = scanner.nextLine();
                         System.out.print("Enter student roll number: ");
                         String rollNo = scanner.nextLine();
                         System.out.print("Enter student email: ");
@@ -51,7 +53,6 @@ public class sgsMain {
                         System.out.print("Enter student roll number to update: ");
                         String rollNo = scanner.nextLine();
                         try {
-                            // Pass both rollNo and scanner as arguments
                             updater.updateStudent(rollNo, scanner); 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -72,6 +73,21 @@ public class sgsMain {
                             e.printStackTrace();
                         }
                     } else if (adminChoice == 5) {
+                        System.out.println("\nUpdate Marks:");
+                        try {
+                            marksUpdater.updateMarks();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (adminChoice == 6) { // New option for generating report card
+                        System.out.print("Enter student roll number to generate report card: ");
+                        String rollNo = scanner.nextLine();
+                        try {
+                            reportCardGenerator.generateReportCard(rollNo);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if (adminChoice == 7) {
                         System.out.println("Admin logged out.");
                         break;
                     } else {
@@ -90,21 +106,14 @@ public class sgsMain {
 
         scanner.close();
     }
+
     private static int safeReadInt(Scanner scanner) {
         while (true) {
             try {
-                if (scanner.hasNextInt()) {
-                    int input = scanner.nextInt();
-                    
-                   scanner.nextLine();
-                    return input;
-                } else {
-                    scanner.nextLine();
-                    System.out.print("Invalid input. Please enter a valid number: ");
-                }
-            } catch (Exception e) {
-                scanner.nextLine();
-                System.out.print("Error: Please enter a valid number: ");
+                String input = scanner.nextLine().trim();
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a valid number: ");
             }
         }
     }

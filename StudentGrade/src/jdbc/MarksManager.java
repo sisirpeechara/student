@@ -5,12 +5,6 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MarksManager {
-
-    // Default constructor
-    public MarksManager() {
-        // Initialization if needed
-    }
-
     public void insertMarks() throws Exception {
         Scanner scanner = new Scanner(System.in);
 
@@ -24,21 +18,25 @@ public class MarksManager {
             System.out.println("2. Mid2");
             System.out.println("3. Internal");
             System.out.println("4. Semester Grade");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Clear the newline character
+            int choice = Integer.parseInt(scanner.nextLine());
 
             String tableName = "";
-            if (choice == 1) {
-                tableName = "mid1";
-            } else if (choice == 2) {
-                tableName = "mid2";
-            } else if (choice == 3) {
-                tableName = "internal";
-            } else if (choice == 4) {
-                tableName = "semester_grade";
-            } else {
-                System.out.println("Invalid choice!");
-                return;
+            switch (choice) {
+                case 1:
+                    tableName = "mid1";
+                    break;
+                case 2:
+                    tableName = "mid2";
+                    break;
+                case 3:
+                    tableName = "internal";
+                    break;
+                case 4:
+                    tableName = "semester_grade";
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+                    return;
             }
 
             // Get student roll number
@@ -46,27 +44,23 @@ public class MarksManager {
             String studentRollNo = scanner.nextLine();
 
             // Get marks for all 5 subjects
-            System.out.print("Enter marks for Subject 1: ");
-            int subject1 = scanner.nextInt();
-            System.out.print("Enter marks for Subject 2: ");
-            int subject2 = scanner.nextInt();
-            System.out.print("Enter marks for Subject 3: ");
-            int subject3 = scanner.nextInt();
-            System.out.print("Enter marks for Subject 4: ");
-            int subject4 = scanner.nextInt();
-            System.out.print("Enter marks for Subject 5: ");
-            int subject5 = scanner.nextInt();
+            int[] subjects = new int[5];
+            for (int i = 0; i < 5; i++) {
+                System.out.printf("Enter marks for Subject %d: ", i + 1);
+                subjects[i] = Integer.parseInt(scanner.nextLine());
+            }
 
             // Prepare the SQL query
-            String query = "INSERT INTO " + tableName + " (student_roll_no, subject1, subject2, subject3, subject4, subject5) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO " + tableName + 
+                " (student_roll_no, subject1, subject2, subject3, subject4, subject5) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+            
             PreparedStatement stmt = DBConnect.con.prepareStatement(query);
 
             stmt.setString(1, studentRollNo);
-            stmt.setInt(2, subject1);
-            stmt.setInt(3, subject2);
-            stmt.setInt(4, subject3);
-            stmt.setInt(5, subject4);
-            stmt.setInt(6, subject5);
+            for (int i = 0; i < 5; i++) {
+                stmt.setInt(i + 2, subjects[i]);
+            }
 
             // Execute the query
             int rowsInserted = stmt.executeUpdate();
@@ -78,9 +72,8 @@ public class MarksManager {
 
             stmt.close();
         } catch (SQLException e) {
+            System.out.println("Error inserting marks: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            scanner.close();
         }
     }
 }
