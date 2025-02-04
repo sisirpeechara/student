@@ -36,8 +36,6 @@ public class sgsMain {
                 String username = scanner.nextLine();
                 System.out.print("Enter Admin Password: ");
                 String password = scanner.nextLine();
-
-                // Validate admin credentials (you might want to implement a proper authentication method)
                 if (!username.equals("admin") || !password.equals("admin123")) {
                     System.out.println("Invalid admin credentials!");
                     continue;
