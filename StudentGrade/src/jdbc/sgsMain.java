@@ -20,6 +20,8 @@ public class sgsMain {
         MarksUpdater marksUpdater = new MarksUpdater();
         ReportCardGenerator reportCardGenerator = new ReportCardGenerator();
         StudentGradeDisplay gradeDisplay = new StudentGradeDisplay();
+        StudentLogin studentLogin = new StudentLogin();
+        AdminLogin adminLogin = new AdminLogin();
 
         while (true) {
             System.out.println("\n===== Student Grade System =====");
@@ -36,113 +38,128 @@ public class sgsMain {
                 String username = scanner.nextLine();
                 System.out.print("Enter Admin Password: ");
                 String password = scanner.nextLine();
-                if (!username.equals("admin") || !password.equals("admin123")) {
-                    System.out.println("Invalid admin credentials!");
-                    continue;
-                }
+                
+                if (adminLogin.authenticateAdmin(username, password)) {
+                    System.out.println("Admin login successful!");
 
-                while (true) {
-                    System.out.println("\n===== Admin Menu =====");
-                    System.out.println("1. Add Student");
-                    System.out.println("2. Update Student");
-                    System.out.println("3. Delete Student");
-                    System.out.println("4. Insert Marks");
-                    System.out.println("5. Update Marks");
-                    System.out.println("6. Generate Report Card");
-                    System.out.println("7. Logout");
-                    System.out.print("Enter your choice: ");
-                    
-                    int adminChoice = safeReadInt(scanner);
+                    while (true) {
+                        System.out.println("\n===== Admin Menu =====");
+                        System.out.println("1. Add Student");
+                        System.out.println("2. Update Student");
+                        System.out.println("3. Delete Student");
+                        System.out.println("4. Insert Marks");
+                        System.out.println("5. Update Marks");
+                        System.out.println("6. Generate Report Card");
+                        System.out.println("7. Logout");
+                        System.out.print("Enter your choice: ");
+                        
+                        int adminChoice = safeReadInt(scanner);
 
-                    if (adminChoice == 1) {
-                        // Add Student
-                        System.out.print("Enter student name: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Enter student roll number: ");
-                        String rollNo = scanner.nextLine();
-                        System.out.print("Enter student email: ");
-                        String email = scanner.nextLine();
-                        System.out.print("Enter student phone number: ");
-                        String phoneNo = scanner.nextLine();
-                        try {
-                            manager.addStudent(name, rollNo, email, phoneNo);
-                            System.out.println("Student added successfully!");
-                        } catch (Exception e) {
-                            System.out.println("Error adding student: " + e.getMessage());
+                        if (adminChoice == 1) {
+                            // Add Student
+                            System.out.print("Enter student name: ");
+                            String name = scanner.nextLine();
+                            System.out.print("Enter student roll number: ");
+                            String rollNo = scanner.nextLine();
+                            System.out.print("Enter student email: ");
+                            String email = scanner.nextLine();
+                            System.out.print("Enter student phone number: ");
+                            String phoneNo = scanner.nextLine();
+                            System.out.print("Enter student password: ");
+                            String studentPassword = scanner.nextLine();
+                            try {
+                                manager.addStudent(name, rollNo, email, phoneNo, studentPassword);
+                            } catch (Exception e) {
+                                System.out.println("Error adding student: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 2) {
+                            // Update Student
+                            System.out.print("Enter student roll number to update: ");
+                            String rollNo = scanner.nextLine();
+                            try {
+                                updater.updateStudent(rollNo, scanner); 
+                            } catch (Exception e) {
+                                System.out.println("Error updating student: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 3) {
+                            // Delete Student
+                            System.out.print("Enter student roll number to delete: ");
+                            String rollNo = scanner.nextLine();
+                            try {
+                                updater.deleteStudent(rollNo);
+                                System.out.println("Student deleted successfully!");
+                            } catch (Exception e) {
+                                System.out.println("Error deleting student: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 4) {
+                            // Insert Marks
+                            System.out.println("\nInsert Marks:");
+                            try {
+                                marksManager.insertMarks();
+                            } catch (Exception e) {
+                                System.out.println("Error inserting marks: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 5) {
+                            // Update Marks
+                            System.out.println("\nUpdate Marks:");
+                            try {
+                                marksUpdater.updateMarks();
+                            } catch (Exception e) {
+                                System.out.println("Error updating marks: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 6) {
+                            // Generate Report Card
+                            System.out.print("Enter student roll number to generate report card: ");
+                            String rollNo = scanner.nextLine();
+                            try {
+                                reportCardGenerator.generateReportCard(rollNo);
+                            } catch (Exception e) {
+                                System.out.println("Error generating report card: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 7) {
+                            System.out.println("Admin logged out.");
+                            break;
+                        } else {
+                            System.out.println("Invalid choice. Please try again.");
                         }
-                    } else if (adminChoice == 2) {
-                        // Update Student
-                        System.out.print("Enter student roll number to update: ");
-                        String rollNo = scanner.nextLine();
-                        try {
-                            updater.updateStudent(rollNo, scanner); 
-                        } catch (Exception e) {
-                            System.out.println("Error updating student: " + e.getMessage());
-                        }
-                    } else if (adminChoice == 3) {
-                        // Delete Student
-                        System.out.print("Enter student roll number to delete: ");
-                        String rollNo = scanner.nextLine();
-                        try {
-                            updater.deleteStudent(rollNo);
-                            System.out.println("Student deleted successfully!");
-                        } catch (Exception e) {
-                            System.out.println("Error deleting student: " + e.getMessage());
-                        }
-                    } else if (adminChoice == 4) {
-                        // Insert Marks
-                        System.out.println("\nInsert Marks:");
-                        try {
-                            marksManager.insertMarks();
-                        } catch (Exception e) {
-                            System.out.println("Error inserting marks: " + e.getMessage());
-                        }
-                    } else if (adminChoice == 5) {
-                        // Update Marks
-                        System.out.println("\nUpdate Marks:");
-                        try {
-                            marksUpdater.updateMarks();
-                        } catch (Exception e) {
-                            System.out.println("Error updating marks: " + e.getMessage());
-                        }
-                    } else if (adminChoice == 6) {
-                        // Generate Report Card
-                        System.out.print("Enter student roll number to generate report card: ");
-                        String rollNo = scanner.nextLine();
-                        try {
-                            reportCardGenerator.generateReportCard(rollNo);
-                        } catch (Exception e) {
-                            System.out.println("Error generating report card: " + e.getMessage());
-                        }
-                    } else if (adminChoice == 7) {
-                        System.out.println("Admin logged out.");
-                        break;
-                    } else {
-                        System.out.println("Invalid choice. Please try again.");
                     }
+                } else {
+                    System.out.println("Invalid admin credentials!");
                 }
             } else if (userType == 2) {
                 // Student Login Section
                 System.out.print("Enter your roll number: ");
                 String studentRollNo = scanner.nextLine();
+                System.out.print("Enter your password: ");
+                String studentPassword = scanner.nextLine();
                 
-                while (true) {
-                    System.out.println("\n===== Student Menu =====");
-                    System.out.println("1. View Grade");
-                    System.out.println("2. Logout");
-                    System.out.print("Enter your choice: ");
+                if (studentLogin.authenticateStudent(studentRollNo, studentPassword)) {
+                    System.out.println("Login successful!");
                     
-                    int studentChoice = safeReadInt(scanner);
-                    
-                    if (studentChoice == 1) {
-                        // Display student grade
-                        gradeDisplay.displayStudentGrade(studentRollNo);
-                    } else if (studentChoice == 2) {
-                        System.out.println("Student logged out.");
-                        break;
-                    } else {
-                        System.out.println("Invalid choice. Please try again.");
+                    while (true) {
+                        System.out.println("\n===== Student Menu =====");
+                        System.out.println("1. View Grade");
+                        System.out.println("2. Logout");
+                        System.out.print("Enter your choice: ");
+                        
+                        int studentChoice = safeReadInt(scanner);
+                        
+                        if (studentChoice == 1) {
+                            // Display student grade
+                            try {
+                                gradeDisplay.displayStudentGrade(studentRollNo);
+                            } catch (Exception e) {
+                                System.out.println("Error displaying grade: " + e.getMessage());
+                            }
+                        } else if (studentChoice == 2) {
+                            System.out.println("Student logged out.");
+                            break;
+                        } else {
+                            System.out.println("Invalid choice. Please try again.");
+                        }
                     }
+                } else {
+                    System.out.println("Invalid roll number or password!");
                 }
             } else if (userType == 3) {
                 System.out.println("Exiting the Student Grade System. Goodbye!");
