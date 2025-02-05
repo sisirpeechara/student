@@ -22,6 +22,7 @@ public class sgsMain {
         StudentGradeDisplay gradeDisplay = new StudentGradeDisplay();
         StudentLogin studentLogin = new StudentLogin();
         AdminLogin adminLogin = new AdminLogin();
+        AdminManager adminManager = new AdminManager();
 
         while (true) {
             System.out.println("\n===== Student Grade System =====");
@@ -50,7 +51,8 @@ public class sgsMain {
                         System.out.println("4. Insert Marks");
                         System.out.println("5. Update Marks");
                         System.out.println("6. Generate Report Card");
-                        System.out.println("7. Logout");
+                        System.out.println("7. Add Admin User");
+                        System.out.println("8. Logout");
                         System.out.print("Enter your choice: ");
                         
                         int adminChoice = safeReadInt(scanner);
@@ -117,6 +119,17 @@ public class sgsMain {
                                 System.out.println("Error generating report card: " + e.getMessage());
                             }
                         } else if (adminChoice == 7) {
+                            // Add Admin User
+                            System.out.print("Enter new admin username: ");
+                            String newUsername = scanner.nextLine();
+                            System.out.print("Enter new admin password: ");
+                            String newPassword = scanner.nextLine();
+                            try {
+                                adminManager.addAdmin(newUsername, newPassword);
+                            } catch (Exception e) {
+                                System.out.println("Error adding admin: " + e.getMessage());
+                            }
+                        } else if (adminChoice == 8) {
                             System.out.println("Admin logged out.");
                             break;
                         } else {
@@ -127,7 +140,7 @@ public class sgsMain {
                     System.out.println("Invalid admin credentials!");
                 }
             } else if (userType == 2) {
-                // Student Login Section
+                // Student Login Section remains the same
                 System.out.print("Enter your roll number: ");
                 String studentRollNo = scanner.nextLine();
                 System.out.print("Enter your password: ");
