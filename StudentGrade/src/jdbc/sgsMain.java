@@ -6,7 +6,6 @@ public class sgsMain {
 
     public static void main(String[] args) {
         try {
-            // Establish initial database connection
             DBConnect.getConnect();
         } catch (Exception e) {
             System.out.println("Database connection failed: " + e.getMessage());
@@ -23,6 +22,7 @@ public class sgsMain {
         StudentLogin studentLogin = new StudentLogin();
         AdminLogin adminLogin = new AdminLogin();
         AdminManager adminManager = new AdminManager();
+        StudentPasswordManager passwordManager = new StudentPasswordManager();
 
         while (true) {
             System.out.println("\n===== Student Grade System =====");
@@ -34,7 +34,6 @@ public class sgsMain {
             int userType = safeReadInt(scanner);
 
             if (userType == 1) { 
-                // Admin Login Section
                 System.out.print("Enter Admin Username: ");
                 String username = scanner.nextLine();
                 System.out.print("Enter Admin Password: ");
@@ -124,6 +123,14 @@ public class sgsMain {
                             String newUsername = scanner.nextLine();
                             System.out.print("Enter new admin password: ");
                             String newPassword = scanner.nextLine();
+                            System.out.print("Confirm new admin password: ");
+                            String confirmPassword = scanner.nextLine();
+                            
+                            if (!newPassword.equals(confirmPassword)) {
+                                System.out.println("Passwords do not match!");
+                                continue;
+                            }
+                            
                             try {
                                 adminManager.addAdmin(newUsername, newPassword);
                             } catch (Exception e) {
@@ -140,7 +147,7 @@ public class sgsMain {
                     System.out.println("Invalid admin credentials!");
                 }
             } else if (userType == 2) {
-                // Student Login Section remains the same
+                // Student Login Section
                 System.out.print("Enter your roll number: ");
                 String studentRollNo = scanner.nextLine();
                 System.out.print("Enter your password: ");
@@ -152,7 +159,8 @@ public class sgsMain {
                     while (true) {
                         System.out.println("\n===== Student Menu =====");
                         System.out.println("1. View Grade");
-                        System.out.println("2. Logout");
+                        System.out.println("2. Change Password");
+                        System.out.println("3. Logout");
                         System.out.print("Enter your choice: ");
                         
                         int studentChoice = safeReadInt(scanner);
@@ -165,6 +173,36 @@ public class sgsMain {
                                 System.out.println("Error displaying grade: " + e.getMessage());
                             }
                         } else if (studentChoice == 2) {
+                            // Change Password
+                            try {
+                                System.out.print("Enter current password: ");
+                                String currentPassword = scanner.nextLine();
+                                System.out.print("Enter new password: ");
+                                String newPassword = scanner.nextLine();
+                                System.out.print("Confirm new password: ");
+                                String confirmPassword = scanner.nextLine();
+                                
+                                if (!newPassword.equals(confirmPassword)) {
+                                    System.out.println("New passwords do not match!");
+                                    continue;
+                                }
+                                
+                                if (newPassword.trim().isEmpty()) {
+                                    System.out.println("New password cannot be empty!");
+                                    continue;
+                                }
+                                
+                                if (passwordManager.changePassword(studentRollNo, currentPassword, newPassword)) {
+                                    System.out.println("Password changed successfully!");
+                                    System.out.println("Please login again with your new password.");
+                                    break; // Return to main menu for re-login
+                                } else {
+                                    System.out.println("Failed to change password.");
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Error changing password: " + e.getMessage());
+                            }
+                        } else if (studentChoice == 3) {
                             System.out.println("Student logged out.");
                             break;
                         } else {

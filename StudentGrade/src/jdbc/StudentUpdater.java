@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class StudentUpdater {
-
-    // Update a student's details
     public void updateStudent(String rollNo, Scanner scanner) throws Exception {
         try {
             DBConnect.getConnect();
@@ -16,7 +14,7 @@ public class StudentUpdater {
             System.out.println("3. Phone Number");
             System.out.print("Enter your choice (1/2/3): ");
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
+            scanner.nextLine();
 
             String query = "";
             switch (choice) {
@@ -59,7 +57,7 @@ public class StudentUpdater {
                 System.out.println("Student deleted successfully!");
             } else {
                 System.out.println("Failed to delete student. Roll number not found.");
-            }
+             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
